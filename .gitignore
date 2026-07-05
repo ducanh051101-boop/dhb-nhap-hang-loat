@@ -1,0 +1,11 @@
+# Du lieu rieng tung may - KHONG dua len GitHub
+mau_bai_dang.xlsx
+sua_*.xlsx
+backups/
+duong_dan_tool.txt
+gui_error.log
+*.dhb
+*.bak
+~$*
+__pycache__/
+*.pyc
