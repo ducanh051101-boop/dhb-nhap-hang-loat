@@ -24,7 +24,7 @@ from datetime import datetime, timezone, timedelta
 
 warnings.filterwarnings("ignore", message="Data Validation extension is not supported")
 
-VERSION = "1.1"   # tang moi lan cap nhat -> de biet 2 may co cung ban khong
+VERSION = "1.2"   # tang moi lan cap nhat -> de biet 2 may co cung ban khong
 
 # ================== CAU HINH ==================
 HERE      = os.path.dirname(os.path.abspath(__file__))

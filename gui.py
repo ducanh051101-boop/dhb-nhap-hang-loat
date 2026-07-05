@@ -164,6 +164,9 @@ class App:
         self._action(c1, "Mở file Excel mẫu để điền", self.open_template, "teal",
                      "Mở (hoặc tự tạo) file mau_bai_dang.xlsx để bạn điền danh sách bài: "
                      "nguồn, caption, trang đăng, lịch đăng… Điền xong nhớ LƯU lại.", width=250)
+        self._action(c1, "Kiểm tra file Excel (chưa ghi gì)", self.action_check, "outline",
+                     "Quét trước khi tạo: liệt kê dòng lỗi — vd page dùng chung 2 tài khoản mà "
+                     "chưa điền cột ‘Tài khoản’, hoặc tên trang gõ sai. Không ghi gì cả.", width=280)
         self._action(c1, "Tạo / ghi vào dự án", self.action_create, "primary",
                      "Đọc file Excel đã điền và tạo bài vào dự án trong tool. Cột “Dự án” gom bài "
                      "vào dự án cùng tên; nếu trùng tên dự án cũ sẽ hỏi Ghi đè hay Nối thêm.", width=250)
@@ -399,6 +402,13 @@ class App:
                 for e in errors: self.logln("   " + e)
             if not by_proj:
                 messagebox.showwarning("Không có bài", "Không có bài hợp lệ để nhập."); return
+            if errors and not messagebox.askyesno(
+                    "Có dòng cần sửa",
+                    f"Có {len(errors)} dòng lỗi sẽ bị BỎ QUA (xem Nhật ký) — "
+                    "hay gặp: page dùng chung mà chưa chọn cột ‘Tài khoản’.\n\n"
+                    "Vẫn ghi các dòng hợp lệ còn lại?\n"
+                    "(Chọn No để huỷ, sửa file Excel rồi làm lại.)"):
+                self.logln("Đã huỷ để sửa file Excel."); return
 
             def exists(pj):
                 p = os.path.join(core.PROJECT_DIR, pj + ".dhb")
@@ -426,6 +436,37 @@ class App:
             self.logln(f"HOÀN TẤT: {total} bài vào {len(by_proj)} dự án. Mở tool → load dự án → chạy.")
             self.reload_lists()
             messagebox.showinfo("Xong", f"Đã nhập {total} bài vào {len(by_proj)} dự án.")
+        self._run(go)
+
+    def action_check(self):
+        """Quét file Excel, liệt kê dòng lỗi (KHÔNG ghi gì) — vd page dùng chung chưa chọn tài khoản."""
+        def go():
+            if not os.path.exists(core.EXCEL):
+                messagebox.showinfo("Chưa có file",
+                    "Chưa có file mau_bai_dang.xlsx.\nBấm ‘Mở file Excel mẫu để điền’ trước."); return
+            posts_raw = core.read_excel(core.EXCEL)
+            if not posts_raw:
+                messagebox.showinfo("Trống", "File Excel chưa có dòng nào."); return
+            tmpl, generic = core.build_templates(core.harvest_posts())
+            fangroups = core.load_fangroups()
+            ok, problems = 0, []
+            for i, row in enumerate(posts_raw):
+                try:
+                    core.build_post(row, i, self.pages, self.profiles, fangroups,
+                                    self.groups, tmpl, generic)
+                    ok += 1
+                except Exception as e:
+                    problems.append(f"   Dòng {i+2}: {e}")
+            self.logln(f"── Kiểm tra Excel: {len(posts_raw)} dòng → {ok} OK, {len(problems)} cần sửa ──")
+            for p in problems:
+                self.logln(p)
+            if problems:
+                messagebox.showwarning("Có dòng cần sửa",
+                    f"{len(problems)}/{len(posts_raw)} dòng có vấn đề (chi tiết ở Nhật ký).\n\n"
+                    "Hay gặp nhất: page dùng chung 2 tài khoản (Sheepie.decor / Bedding Decor) "
+                    "mà chưa điền cột ‘Tài khoản’.")
+            else:
+                messagebox.showinfo("Tốt", f"Tất cả {ok} dòng hợp lệ — sẵn sàng tạo dự án.")
         self._run(go)
 
     def action_export(self):
