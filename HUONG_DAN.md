@@ -9,6 +9,24 @@ và **sửa hàng loạt các dự án đã có**, thay vì gõ tay từng bài 
 
 ---
 
+## Tự động cập nhật (không phải gửi file qua lại)
+
+Công cụ **tự tải bản mới nhất từ GitHub mỗi lần mở** (file `capnhat.py` chạy trước khi mở giao diện).
+- Kho code: **https://github.com/ducanh051101-boop/dhb-nhap-hang-loat** (chỉ có code, KHÔNG có dữ liệu/tài khoản FB).
+- Có bản mới → chỉ cần **mở lại công cụ** là tự cập nhật. Không có mạng thì chạy bản đang có (không bao giờ hỏng).
+- Góc GUI luôn hiện **"phiên bản X"** để biết đang ở bản nào.
+
+### Gửi cho người khác dùng (làm 1 lần, sau đó họ tự cập nhật)
+1. Gửi họ link tải: **https://github.com/ducanh051101-boop/dhb-nhap-hang-loat/archive/refs/heads/main.zip**
+   (hoặc vào trang repo → nút xanh **Code → Download ZIP**).
+2. Họ giải nén ra 1 thư mục, **đặt cạnh thư mục "DHB Reup Facebook"** trên máy họ.
+3. Cài **Python 3** (tick *Add to PATH*) → chạy **`CaiThuVien.bat`** một lần.
+4. Chạy **`Chay_GUI.bat`**. Từ đó về sau **tự cập nhật**, không cần gửi lại gì nữa.
+
+> Máy họ cài DHB Reup ở chỗ lạ → tạo file `duong_dan_tool.txt` trong thư mục, dán đường dẫn thư mục `Data` của DHB Reup.
+
+---
+
 ## Chuyển sang máy khác dùng (4 bước)
 
 1. **Cài Python 3** trên máy mới: tải ở https://www.python.org/downloads/ — khi cài **nhớ tick "Add Python to PATH"**.

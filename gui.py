@@ -10,20 +10,28 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 if HERE not in sys.path:
     sys.path.insert(0, HERE)
 
-# --- dam bao co customtkinter (tu cai neu thieu) ---
-try:
-    import customtkinter as ctk
-except Exception:
+# --- dam bao cac thu vien can thiet (tu cai neu thieu) ---
+def _ensure(mod, pip_name=None):
     try:
-        subprocess.run([sys.executable, "-m", "pip", "install", "customtkinter", "--quiet"],
-                       check=True)
-        import customtkinter as ctk
+        __import__(mod)
+        return True
     except Exception:
-        import tkinter.messagebox as mb
-        mb.showerror("Thiếu thư viện",
-                     "Cần cài 'customtkinter'. Mở CMD gõ:\n\n"
-                     "    pip install customtkinter\n\nrồi chạy lại.")
-        raise SystemExit
+        try:
+            subprocess.run([sys.executable, "-m", "pip", "install", pip_name or mod, "--quiet"],
+                           check=True)
+            __import__(mod)
+            return True
+        except Exception:
+            return False
+
+_ensure("openpyxl")   # dung de doc/ghi Excel
+if not _ensure("customtkinter"):
+    import tkinter.messagebox as mb
+    mb.showerror("Thiếu thư viện",
+                 "Cần cài 'customtkinter'. Mở CMD gõ:\n\n"
+                 "    pip install customtkinter\n\nrồi chạy lại.")
+    raise SystemExit
+import customtkinter as ctk
 
 from tkinter import messagebox, StringVar
 import import_bai_dang as core
